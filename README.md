@@ -5,7 +5,7 @@ I worked on this by myself: Henry Arevalo
 
 # Contributions
 
-I worked on the three major classes for the package-ex2: CostcoSimulation, Customer, Producer,
+I worked on the four major classes for the package-ex2: CostcoSimulation, Customer, Producer,
 and CheckoutQueue!
 
 
