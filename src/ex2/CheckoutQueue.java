@@ -4,21 +4,20 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class CheckoutQueue {
-    public static final int SHUTDOWN_SIGNAL = -1;
-
-    private final BlockingQueue<Integer> customerIds = new LinkedBlockingQueue<>();
+    private static final int SHUTDOWN_SIGNAL = -1;
+    private final BlockingQueue<QueueEntry> customers = new LinkedBlockingQueue<>();
 
     public void addCustomer(int customerId) throws InterruptedException {
         if (customerId <= 0) {
             throw new IllegalArgumentException("Customer IDs must be positive.");
         }
 
-        customerIds.put(customerId);
+        customers.put(new QueueEntry(customerId, System.nanoTime()));
         System.out.printf("Customer %d joined the checkout queue.%n", customerId);
     }
 
-    public int takeNextCustomer() throws InterruptedException {
-        return customerIds.take();
+    public QueueEntry takeNextCustomer() throws InterruptedException {
+        return customers.take();
     }
 
     public void close(int cashierCount) throws InterruptedException {
@@ -27,7 +26,29 @@ public class CheckoutQueue {
         }
 
         for (int i = 0; i < cashierCount; i++) {
-            customerIds.put(SHUTDOWN_SIGNAL);
+            customers.put(new QueueEntry(SHUTDOWN_SIGNAL, 0));
+        }
+    }
+
+    public static class QueueEntry {
+        private final int customerId;
+        private final long enqueueTimeNanos;
+
+        private QueueEntry(int customerId, long enqueueTimeNanos) {
+            this.customerId = customerId;
+            this.enqueueTimeNanos = enqueueTimeNanos;
+        }
+
+        public int getCustomerId() {
+            return customerId;
+        }
+
+        public long getEnqueueTimeNanos() {
+            return enqueueTimeNanos;
+        }
+
+        public boolean isShutdownSignal() {
+            return customerId == SHUTDOWN_SIGNAL;
         }
     }
 }

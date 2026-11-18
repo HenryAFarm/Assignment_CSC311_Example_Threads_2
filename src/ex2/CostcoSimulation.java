@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class CostcoSimulation {
     private CostcoSimulation() {
@@ -14,13 +15,8 @@ public class CostcoSimulation {
         try (Scanner scanner = new Scanner(System.in)) {
             int customerCount = readInteger(scanner, "Number of customers: ", 1);
             int cashierCount = readInteger(scanner, "Number of cashiers: ", 1);
-            int maxShoppingTimeSeconds = readInteger(
-                    scanner, "Maximum shopping time (seconds): ", 0);
-            int maxCheckoutTimeSeconds = readInteger(
-                    scanner, "Maximum checkout time (seconds): ", 0);
 
-            runSimulation(customerCount, cashierCount,
-                    maxShoppingTimeSeconds, maxCheckoutTimeSeconds);
+            runSimulation(customerCount, cashierCount);
         }
     }
 
@@ -35,19 +31,18 @@ public class CostcoSimulation {
                     return value;
                 }
             } catch (NumberFormatException ignored) {
-                // Prompt again when the input is not an integer.
+
             }
 
             System.out.printf("Enter an integer greater than or equal to %d.%n", minimum);
         }
     }
 
-    private static void runSimulation(int customerCount, int cashierCount,
-                                      int maxShoppingTimeSeconds,
-                                      int maxCheckoutTimeSeconds)
+    private static void runSimulation(int customerCount, int cashierCount)
             throws InterruptedException {
         CheckoutQueue checkoutQueue = new CheckoutQueue();
         AtomicInteger completedCustomers = new AtomicInteger();
+        AtomicLong totalWaitTimeNanos = new AtomicLong();
         int customerWorkerCount = Math.min(customerCount,
                 Math.max(1, Runtime.getRuntime().availableProcessors()));
         ExecutorService customerExecutor = Executors.newFixedThreadPool(customerWorkerCount);
@@ -56,12 +51,11 @@ public class CostcoSimulation {
         try {
             for (int cashierId = 1; cashierId <= cashierCount; cashierId++) {
                 cashierExecutor.execute(new Cashier(cashierId, checkoutQueue,
-                        maxCheckoutTimeSeconds, completedCustomers));
+                        completedCustomers, totalWaitTimeNanos));
             }
 
             for (int customerId = 1; customerId <= customerCount; customerId++) {
-                customerExecutor.execute(new Customer(customerId, checkoutQueue,
-                        maxShoppingTimeSeconds));
+                customerExecutor.execute(new Customer(customerId, checkoutQueue));
             }
 
             customerExecutor.shutdown();
@@ -73,6 +67,12 @@ public class CostcoSimulation {
 
             System.out.printf("Simulation complete: %d of %d customers served.%n",
                     completedCustomers.get(), customerCount);
+            int servedCustomers = completedCustomers.get();
+            double averageWaitSeconds = servedCustomers == 0 ? 0
+                    : (double) totalWaitTimeNanos.get()
+                    / servedCustomers / TimeUnit.SECONDS.toNanos(1);
+            System.out.printf("Average customer wait time in line: %.2f seconds.%n",
+                    averageWaitSeconds);
         } catch (InterruptedException exception) {
             customerExecutor.shutdownNow();
             cashierExecutor.shutdownNow();
@@ -84,7 +84,7 @@ public class CostcoSimulation {
     private static void awaitTermination(ExecutorService executorService)
             throws InterruptedException {
         while (!executorService.awaitTermination(1, TimeUnit.DAYS)) {
-            // Continue waiting for all submitted simulation tasks.
+
         }
     }
 }
