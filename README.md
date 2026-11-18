@@ -17,8 +17,10 @@ The program prompts for:
 
 1. Number of customers (at least 1)
 2. Number of cashiers (at least 1)
-3. Maximum shopping time in seconds (0 or more)
-4. Maximum checkout time in seconds (0 or more)
+
+Each customer shops for a randomly generated duration of 1 to 5 seconds, then
+joins the queue. Cashiers serve customers in the order they join, taking a
+random 1 to 5 seconds to check out each customer.
 
 Each customer shops for a random duration from zero through the maximum
 shopping time, then joins the queue. Cashiers serve customers in the order
