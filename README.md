@@ -2,6 +2,8 @@
 
 I worked on this by myself: Henry Arevalo
 
+Talked to Sheraz about what is good or what needed to change!
+
 
 # Contributions
 
@@ -17,8 +19,10 @@ The program prompts for:
 
 1. Number of customers (at least 1)
 2. Number of cashiers (at least 1)
-3. Maximum shopping time in seconds (0 or more)
-4. Maximum checkout time in seconds (0 or more)
+
+Each customer shops for a randomly generated duration of 1 to 5 seconds, then
+joins the queue. Cashiers serve customers in the order they join, taking a
+random 1 to 5 seconds to check out each customer.
 
 Each customer shops for a random duration from zero through the maximum
 shopping time, then joins the queue. Cashiers serve customers in the order
@@ -27,6 +31,8 @@ maximum checkout time.
 
 The program prints shopping, queue, and service events,
 then reports how many customers were served.
+
+The average time for each customer that were in line.
 
 ## Ex2 package
 The changes to the code and additions are located in the package ex2.
