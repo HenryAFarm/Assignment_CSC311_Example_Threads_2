@@ -2,6 +2,8 @@
 
 I worked on this by myself: Henry Arevalo
 
+Talked to Sheraz about what is good or what needed to change!
+
 
 # Contributions
 
@@ -29,6 +31,8 @@ maximum checkout time.
 
 The program prints shopping, queue, and service events,
 then reports how many customers were served.
+
+The average time for each customer that where in line.
 
 ## Ex2 package
 The changes to the code and additions are located in the package ex2.
