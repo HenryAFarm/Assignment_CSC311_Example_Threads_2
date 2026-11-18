@@ -32,7 +32,7 @@ maximum checkout time.
 The program prints shopping, queue, and service events,
 then reports how many customers were served.
 
-The average time for each customer that where in line.
+The average time for each customer that were in line.
 
 ## Ex2 package
 The changes to the code and additions are located in the package ex2.
