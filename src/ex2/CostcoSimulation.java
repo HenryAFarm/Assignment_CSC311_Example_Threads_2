@@ -65,7 +65,7 @@ public class CostcoSimulation {
             cashierExecutor.shutdown();
             awaitTermination(cashierExecutor);
 
-            System.out.printf("Simulation complete: %d of %d customers served.%n",
+            System.out.printf("\nSimulation complete: %d of %d customers served.%n",
                     completedCustomers.get(), customerCount);
             int servedCustomers = completedCustomers.get();
             double averageWaitSeconds = servedCustomers == 0 ? 0
