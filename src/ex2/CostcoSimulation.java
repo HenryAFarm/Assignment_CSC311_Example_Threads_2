@@ -15,8 +15,10 @@ public class CostcoSimulation {
         try (Scanner scanner = new Scanner(System.in)) {
             int customerCount = readInteger(scanner, "Number of customers: ", 1);
             int cashierCount = readInteger(scanner, "Number of cashiers: ", 1);
+            int queueSize = readInteger(scanner,
+                    "Maximum capacity of checkout queue: ", 1);
 
-            runSimulation(customerCount, cashierCount);
+            runSimulation(customerCount, cashierCount, queueSize);
         }
     }
 
@@ -38,9 +40,9 @@ public class CostcoSimulation {
         }
     }
 
-    private static void runSimulation(int customerCount, int cashierCount)
+    private static void runSimulation(int customerCount, int cashierCount, int queueSize)
             throws InterruptedException {
-        CheckoutQueue checkoutQueue = new CheckoutQueue();
+        CheckoutQueue checkoutQueue = new CheckoutQueue(queueSize);
         AtomicInteger completedCustomers = new AtomicInteger();
         AtomicLong totalWaitTimeNanos = new AtomicLong();
         int customerWorkerCount = Math.min(customerCount,

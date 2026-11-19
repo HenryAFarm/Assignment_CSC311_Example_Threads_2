@@ -1,11 +1,24 @@
 package ex2;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class CheckoutQueue {
     private static final int SHUTDOWN_SIGNAL = -1;
-    private final BlockingQueue<QueueEntry> customers = new LinkedBlockingQueue<>();
+    private final BlockingQueue<QueueEntry> customers;
+
+    public CheckoutQueue() {
+        customers = new LinkedBlockingQueue<>();
+    }
+
+    public CheckoutQueue(int capacity) {
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Queue capacity must be positive.");
+        }
+
+        customers = new ArrayBlockingQueue<>(capacity);
+    }
 
     public void addCustomer(int customerId) throws InterruptedException {
         if (customerId <= 0) {
