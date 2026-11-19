@@ -19,15 +19,17 @@ The program prompts for:
 
 1. Number of customers (at least 1)
 2. Number of cashiers (at least 1)
+3. Maximum customers waiting in the shared checkout queue (at least 1)
 
 Each customer shops for a randomly generated duration of 1 to 5 seconds, then
-joins the queue. Cashiers serve customers in the order they join, taking a
-random 1 to 5 seconds to check out each customer.
+joins the bounded queue. If it is full, customers wait until a cashier makes
+room. Cashiers serve customers in the order they join, taking a random 1 to 5
+seconds to check out each customer. The queue size counts waiting customers,
+not customers currently being served.
 
-Each customer shops for a random duration from zero through the maximum
-shopping time, then joins the queue. Cashiers serve customers in the order
-they join, with each checkout taking a random duration from zero through the
-maximum checkout time. 
+The program prints shopping, queue, and service events,
+then reports how many customers were served and the average time customers
+waited in line before a cashier became available.
 
 The program prints shopping, queue, and service events,
 then reports how many customers were served.
@@ -40,6 +42,4 @@ The other packages were there as I clone it from Moaath Alrajab repository
 
 ## Current scope
 
-This version runs one simulation per launch. It does not calculate queue wait
-time statistics, model a specified customer-arrival rate, compare staffing
-scenarios automatically, or make a cost-versus-service recommendation.
+This version runs one simulation per run. 
